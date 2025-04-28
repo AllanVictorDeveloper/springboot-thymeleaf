@@ -1,28 +1,121 @@
 package com.mvc_thymeleaf.services;
 
 import com.mvc_thymeleaf.dto.request.UsuarioRequestDto;
+import com.mvc_thymeleaf.dto.response.UsuarioResponseDto;
+import com.mvc_thymeleaf.entities.Papel;
 import com.mvc_thymeleaf.entities.Usuario;
+import com.mvc_thymeleaf.enums.PapelUsuarioEnum;
+import com.mvc_thymeleaf.repository.IPapelRepository;
 import com.mvc_thymeleaf.repository.IUsuarioRepository;
+import com.mvc_thymeleaf.services.exceptions.LoginExisteException;
 import com.mvc_thymeleaf.services.mapper.UsuarioMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
     private final IUsuarioRepository iUsuarioRepository;
+    private final IPapelRepository iPapelRepository;
 
-    private final UsuarioMapper usuarioMappers;
+    private final UsuarioMapper usuarioMapper;
 
-    public UsuarioService(IUsuarioRepository iUsuarioRepository, UsuarioMapper usuarioMappers) {
+    public UsuarioService(IUsuarioRepository iUsuarioRepository, IPapelRepository iPapelRepository, UsuarioMapper usuarioMapper) {
         this.iUsuarioRepository = iUsuarioRepository;
-        this.usuarioMappers = usuarioMappers;
+        this.iPapelRepository = iPapelRepository;
+        this.usuarioMapper = usuarioMapper;
     }
 
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void salvarUsuario(UsuarioRequestDto usuarioRequestDto) {
 
-      var usuarioEntidade =  usuarioMappers.converterParaEntidade(usuarioRequestDto);
+        var usuario = this.iUsuarioRepository.findByLogin(usuarioRequestDto.getLogin());
+
+        if (usuario != null)
+            throw new LoginExisteException("Login já cadastrado no sistema.");
+
+        Papel papel = this.iPapelRepository.findByPapel(PapelUsuarioEnum.USER.getRole());
+
+        List<Papel> papeis = new ArrayList<Papel>();
+        papeis.add(papel);
+
+        var usuarioEntidade = usuarioMapper.converterParaEntidade(usuarioRequestDto, papeis);
 
         this.iUsuarioRepository.save(usuarioEntidade);
     }
+
+
+    public List<UsuarioResponseDto> buscarTodosUsuarios() {
+
+        var listaUsuarios = this.iUsuarioRepository.findAll();
+
+        List<UsuarioResponseDto> usuarioResponseDtoList = listaUsuarios
+                .stream()
+                .map(usuarios -> this.usuarioMapper.converterParaDto(usuarios))
+                .toList();
+
+        return usuarioResponseDtoList;
+
+    }
+
+    public UsuarioResponseDto buscarUsuarioPorId(Long id) {
+        var usuario = this.iUsuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
+
+        return this.usuarioMapper.converterParaDto(usuario);
+
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void apagarUsuario(Long id) {
+
+        var usuario = this.usuarioMapper.converterUsuerioResponseParaEntidade(this.buscarUsuarioPorId(id));
+
+        this.iUsuarioRepository.delete(usuario);
+
+    }
+
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void editarUsuario(Long id, UsuarioRequestDto usuarioRequestDto) {
+
+        var usuario = this.iUsuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
+
+        var usuarioEntidade = usuarioMapper.converterParaEntidadeEditar(usuario, usuarioRequestDto);
+
+        this.iUsuarioRepository.saveAndFlush(usuarioEntidade);
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void atribuirPapel(int[] pps, Long idUsuario) {
+
+        //Obtém a lista de papéis selecionada pelo usuário do banco
+        List<Papel> papeis = new ArrayList<Papel>();
+        for (int i = 0; i < pps.length; i++) {
+            long idPapel = pps[i];
+            Optional<Papel> papelOptional = this.iPapelRepository.findById(idPapel);
+            if (papelOptional.isPresent()) {
+                Papel papel = papelOptional.get();
+                papeis.add(papel);
+            }
+        }
+        var usuarioEntidade = this.usuarioMapper
+                .converterUsuerioResponseParaEntidade(this.buscarUsuarioPorId(idUsuario));
+
+
+        if (usuarioEntidade != null) {
+            Usuario usr = usuarioEntidade;
+            usr.setPapeis(papeis); // relaciona papéis ao usuário
+            this.iUsuarioRepository.save(usr);
+
+        }
+
+    }
+
 }

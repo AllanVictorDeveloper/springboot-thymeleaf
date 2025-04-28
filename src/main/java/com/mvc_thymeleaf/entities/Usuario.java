@@ -9,7 +9,9 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_USUARIOS")
@@ -27,7 +29,7 @@ public class Usuario {
 
     @NotEmpty(message = "O CPF deve ser informado")
     @CPF(message = "CPF inválido")
-    @Column(name = "USU_CPF")
+    @Column(name = "USU_CPF", unique = true)
     private String cpf;
 
     @Basic
@@ -35,11 +37,11 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "USU_DATA_NASCIMENTO")
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     @NotEmpty(message = "O email deve ser informado")
     @Email(message = "Email inválido")
-    @Column(name = "USU_EMAIL")
+    @Column(name = "USU_EMAIL", unique = true)
     private String email;
 
     @NotEmpty(message = "A senha deve ser informada")
@@ -48,12 +50,20 @@ public class Usuario {
     private String password;
 
     @NotEmpty(message = "O login deve ser informada")
-    @Size(min = 5, message = "A login deve ter no minimo 5 caracteres")
-    @Column(name = "USU_LOGIN")
+    @Size(min = 5, message = "O login deve ter no minimo 5 caracteres")
+    @Column(name = "USU_LOGIN", unique = true)
     private String login;
 
     @Column(name = "USU_ATIVO")
     private boolean ativo;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_papel",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "papel_id"))
+    List<Papel> papeis;
 
     public Long getId() {
         return id;
@@ -79,11 +89,11 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -117,5 +127,13 @@ public class Usuario {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public List<Papel> getPapeis() {
+        return papeis;
+    }
+
+    public void setPapeis(List<Papel> papeis) {
+        this.papeis = papeis;
     }
 }

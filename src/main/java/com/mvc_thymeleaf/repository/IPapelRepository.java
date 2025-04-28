@@ -1,11 +1,11 @@
 package com.mvc_thymeleaf.repository;
 
-import com.mvc_thymeleaf.entities.Usuario;
+import com.mvc_thymeleaf.entities.Papel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface IPapelRepository extends JpaRepository<Papel, Long> {
 
-    Usuario findByLogin(String login);
+    Papel findByPapel(String papel);
 }
