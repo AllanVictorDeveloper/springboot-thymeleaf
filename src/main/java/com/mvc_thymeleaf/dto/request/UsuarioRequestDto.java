@@ -45,5 +45,7 @@ public class UsuarioRequestDto {
     @Size(min = 5, message = "O login deve ter no minimo 5 caracteres")
     private String login;
 
+    private boolean ativo;
+
 
 }

@@ -35,6 +35,7 @@
                     <th>Nascimento</th>
                     <th>E-mail</th>
                     <th>Papeis</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -49,10 +50,13 @@
                     <td th:text="${usuario.cpf}">CPF</td>
                     <td th:text="${#temporals.format(usuario.dataNascimento, 'dd/MM/yyyy')}">Nascimento</td>
                     <td th:text="${usuario.email}">E-mail</td>
-                    <td >
+                    <td>
                         <th:block th:each="pp : ${usuario.papeis}">
                             <span th:text="${pp.papel}">Papel</span><br/>
                         </th:block>
+                    </td>
+                    <td>
+                        <span th:text="${usuario.ativo} ? 'ATIVO' : 'NÂO ATIVO' ">ATIVO</span><br/>
                     </td>
                     <td>
                         <!-- Botões de Ação -->

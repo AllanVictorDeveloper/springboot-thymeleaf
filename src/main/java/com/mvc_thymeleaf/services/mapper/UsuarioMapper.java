@@ -4,6 +4,7 @@ import com.mvc_thymeleaf.dto.request.UsuarioRequestDto;
 import com.mvc_thymeleaf.dto.response.UsuarioResponseDto;
 import com.mvc_thymeleaf.entities.Papel;
 import com.mvc_thymeleaf.entities.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,6 +12,11 @@ import java.util.List;
 @Component
 public class UsuarioMapper {
 
+    private final BCryptPasswordEncoder criptografia;
+
+    public UsuarioMapper(BCryptPasswordEncoder criptografia) {
+        this.criptografia = criptografia;
+    }
 
     public Usuario converterParaEntidade(UsuarioRequestDto requestDto, List<Papel> papeis) {
 
@@ -20,7 +26,7 @@ public class UsuarioMapper {
         usuario.setCpf(requestDto.getCpf());
         usuario.setDataNascimento(requestDto.getDataNascimento());
         usuario.setEmail(requestDto.getEmail());
-        usuario.setPassword(requestDto.getPassword());
+        usuario.setPassword(criptografia.encode(requestDto.getPassword()));
         usuario.setLogin(requestDto.getLogin());
         usuario.setPapeis(papeis);
 

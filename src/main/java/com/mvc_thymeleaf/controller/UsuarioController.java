@@ -1,15 +1,22 @@
 package com.mvc_thymeleaf.controller;
 
 import com.mvc_thymeleaf.dto.request.UsuarioRequestDto;
+import com.mvc_thymeleaf.entities.Usuario;
+import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import com.mvc_thymeleaf.services.PapelUsuarioService;
 import com.mvc_thymeleaf.services.UsuarioService;
 import com.mvc_thymeleaf.services.exceptions.LoginExisteException;
+import com.mvc_thymeleaf.utils.ConsultarUSuarioAutenticado;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/usuario")
@@ -17,11 +24,22 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    private final IUsuarioRepository iUsuarioRepository;
+
     private final PapelUsuarioService papelUsuarioService;
 
-    public UsuarioController(UsuarioService usuarioService, PapelUsuarioService papelUsuarioService) {
+    public UsuarioController(UsuarioService usuarioService, IUsuarioRepository iUsuarioRepository, PapelUsuarioService papelUsuarioService) {
         this.usuarioService = usuarioService;
+        this.iUsuarioRepository = iUsuarioRepository;
         this.papelUsuarioService = papelUsuarioService;
+    }
+
+    @GetMapping("/index")
+    public String index() {
+
+        String redirectURL = this.usuarioService.autorizacao();
+
+        return redirectURL;
     }
 
     @GetMapping("/novo")
@@ -133,7 +151,7 @@ public class UsuarioController {
             return "redirect:/usuario/editarPapel/" + id;
         }
 
-        this.usuarioService.atribuirPapel(pps, id);
+        this.usuarioService.atribuirPapel(pps, id, requestDto.isAtivo());
 
         attributes.addFlashAttribute("mensagem", "Usuário atualizado com sucesso!");
 

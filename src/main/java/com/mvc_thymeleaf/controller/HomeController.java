@@ -15,4 +15,11 @@ public class HomeController {
         mv.addObject("msnBemVindo", "Bem-vindo à biblioteca");
         return mv;
     }
+
+    @RequestMapping("/login")
+    public ModelAndView entrar(){
+        ModelAndView mv = new ModelAndView("login");
+
+        return mv;
+    }
 }

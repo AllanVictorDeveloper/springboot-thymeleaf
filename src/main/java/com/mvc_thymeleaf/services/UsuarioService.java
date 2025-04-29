@@ -9,6 +9,8 @@ import com.mvc_thymeleaf.repository.IPapelRepository;
 import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import com.mvc_thymeleaf.services.exceptions.LoginExisteException;
 import com.mvc_thymeleaf.services.mapper.UsuarioMapper;
+import com.mvc_thymeleaf.utils.ConsultarUSuarioAutenticado;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,7 +95,7 @@ public class UsuarioService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void atribuirPapel(int[] pps, Long idUsuario) {
+    public void atribuirPapel(int[] pps, Long idUsuario, boolean ativo) {
 
         //Obtém a lista de papéis selecionada pelo usuário do banco
         List<Papel> papeis = new ArrayList<Papel>();
@@ -108,6 +110,7 @@ public class UsuarioService {
         var usuarioEntidade = this.usuarioMapper
                 .converterUsuerioResponseParaEntidade(this.buscarUsuarioPorId(idUsuario));
 
+        usuarioEntidade.setAtivo(ativo);
 
         if (usuarioEntidade != null) {
             Usuario usr = usuarioEntidade;
@@ -116,6 +119,38 @@ public class UsuarioService {
 
         }
 
+    }
+
+    public Usuario buscarUsuarioPorLogin(String login){
+        return this.iUsuarioRepository.findByLogin(login);
+    }
+
+    public String autorizacao(){
+       var login =  ConsultarUSuarioAutenticado.getNomeUsuarioAutenticado();
+
+        Usuario usuario = this.buscarUsuarioPorLogin(login);
+        String redirectURL = "";
+        if (this.temAutorizacao(usuario, "ADMIN")) {
+            redirectURL = "/auth/admin/admin-index";
+        } else if (this.temAutorizacao(usuario, "USER")) {
+            redirectURL = "/auth/user/user-index";
+        } else if (this.temAutorizacao(usuario, "BIBLIOTECARIO")) {
+            redirectURL = "/auth/biblio/biblio-index";
+        }
+        return redirectURL;
+    }
+
+
+    /**
+     * Método que verifica qual papel o usuário tem na aplicação
+     */
+    public boolean temAutorizacao(Usuario usuario, String papel) {
+        for (Papel pp : usuario.getPapeis()) {
+            if (pp.getPapel().equals(papel)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

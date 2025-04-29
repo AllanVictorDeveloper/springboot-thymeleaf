@@ -27,6 +27,12 @@
 
             <h2 class="mb-4">Cadastrar Usuário</h2>
 
+            <!-- Alerta de mensagem -->
+            <div class="alert alert-success alert-dismissible fade show" th:if="${mensagem}">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <span th:text="${mensagem}"></span>
+            </div>
+
             <form id="formUsuario" class="needs-validation"
                   th:action="@{/usuario/salvar}"
                   th:object="${usuario}" method="post" novalidate>
