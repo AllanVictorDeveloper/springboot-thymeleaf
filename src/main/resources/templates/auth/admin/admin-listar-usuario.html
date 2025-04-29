@@ -41,7 +41,7 @@
                 <tbody>
                 <!-- Mensagem quando não há usuários -->
                 <tr th:if="${usuarios.empty}" class="text-center">
-                    <td colspan="5">Sem usuários cadastrados</td>
+                    <td colspan="6">Sem usuários cadastrados</td>
                 </tr>
                 <!-- Listagem dos usuários -->
                 <tr th:each="usuario : ${usuarios}">

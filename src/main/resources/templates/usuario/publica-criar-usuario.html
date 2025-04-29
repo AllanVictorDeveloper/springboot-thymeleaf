@@ -28,7 +28,7 @@
             <h2 class="mb-4">Cadastrar Usuário</h2>
 
             <form id="formUsuario" class="needs-validation"
-                  th:action="@{/usuario/editar/{id}(id=${usuario.id})}"
+                  th:action="@{/usuario/salvar}"
                   th:object="${usuario}" method="post" novalidate>
 
                 <!-- Nome -->
