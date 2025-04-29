@@ -56,6 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/admin/**").hasRole("ADMIN")
                         .requestMatchers("/auth/biblio/**").hasRole("BIBLIOTECARIO")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/usuario/editarPapel/**").hasRole("ADMIN")
                         .requestMatchers("/usuario/admin/***").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
