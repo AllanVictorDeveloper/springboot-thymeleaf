@@ -4,20 +4,49 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" th:href="@{/bootstrap-5.2.3-dist/css/bootstrap.min.css}">
-    <script th:src="@{/bootstrap-5.2.3-dist/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
+        .home-container {
+            margin-top: 3rem;
+        }
+
+        .greeting-card {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <div th:insert="~{fragments/publica-nav :: nav}"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h2 th:text="${msnBemVindo}"></h2>
+<div th:insert="~{fragments/publica-nav :: nav}"></div>
+<div class="container home-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card greeting-card">
+                <h2 class="welcome-heading" th:text="${msnBemVindo}">
+                    <i class="bi bi-stars me-2"></i> Bem-vindo!
+                </h2>
+                <p class="lead">
+                    Este é o seu painel inicial. Utilize o menu de navegação para acessar as diversas
+                    funcionalidades do sistema.
+                </p>
             </div>
         </div>
     </div>
-    <!-- Link do Bootstrap 5 JS e dependências (Popper.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

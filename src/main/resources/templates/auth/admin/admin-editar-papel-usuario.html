@@ -3,117 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Papéis</title>
+    <title>Gerenciar Papéis do Usuário</title>
 
-    <!-- Link para o Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- Script para o Bootstrap 5 JS e dependências -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        .mensagem {
-            color: red;
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .edit-roles-container {
+            margin-top: 2rem;
+        }
+
+        .edit-roles-card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-roles-card-header {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .edit-roles-card-body {
+            padding: 1.5rem;
+        }
+
+        .form-label-custom {
+            font-weight: bold;
+        }
+
+        .form-control-plaintext {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .form-check-custom {
+            padding-left: 1.5em;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check-input-custom {
+            float: left;
+            margin-left: -1.5em;
+        }
+
+        .btn-warning-custom {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .btn-warning-custom:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        .text-danger-custom {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
         }
     </style>
 </head>
 <body>
 <div th:insert="~{fragments/publica-nav :: nav}"></div>
 
-<div class="container my-4">
-    <div class="row">
-        <div class="col">
-            <h2>Atribuir Papel ao Usuário</h2>
-
-            <form th:action="@{/usuario/editarPapel/{id}(id=${usuario.id})}" th:object="${usuario}" method="post">
-
-                <!-- Nome -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Nome:</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="text" th:field="*{nome}" disabled>
-                    </div>
+<div class="container edit-roles-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card edit-roles-card">
+                <div class="card-header edit-roles-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-badge-fill me-2"></i> Gerenciar Papéis do Usuário
+                    </h3>
                 </div>
+                <div class="card-body edit-roles-card-body">
+                    <form th:action="@{/usuario/editarPapel/{id}(id=${usuario.id})}" th:object="${usuario}" method="post">
 
-                <!-- CPF -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">CPF:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control" type="text" th:field="*{cpf}" disabled>
-                    </div>
-                </div>
+                        <h5 class="mb-3">Informações do Usuário</h5>
 
-                <!-- Nascimento -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Nascimento:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" type="text" th:field="*{dataNascimento}" disabled>
-                    </div>
-                </div>
-
-                <!-- Email -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Email:</label>
-                    <div class="col-sm-6">
-                        <input class="form-control" type="text" th:field="*{email}" disabled>
-                    </div>
-                </div>
-
-                <!-- Login -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Login:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control" type="text" th:field="*{login}" disabled>
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Ativado?:</label>
-                    <div class="col-sm-4">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" value="true"
-                                   th:field="*{ativo}">
-                            <label class="form-check-label">ativo</label>
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">Nome:</label>
+                            <input type="text" class="form-control-plaintext" th:field="*{nome}" readonly>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" value="false"
-                                   th:field="*{ativo}">
-                            <label class="form-check-label">não ativo</label>
+
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">CPF:</label>
+                            <input type="text" class="form-control-plaintext" th:field="*{cpf}" readonly>
                         </div>
-                    </div>
-                </div>
 
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">Nascimento:</label>
+                            <input type="text" class="form-control-plaintext" th:field="*{dataNascimento}" readonly>
+                        </div>
 
-                <!-- Papéis -->
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">Papéis:</label>
-                    <div class="col-sm-10">
-                        <div th:each="pp : ${listaPapeis}">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="pps" th:value="${pp.id}"
-                                       th:checked="${#lists.contains(usuario.papeis, pp)}">
-                                <label class="form-check-label" th:text="${pp.papel}"></label>
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">Email:</label>
+                            <input type="text" class="form-control-plaintext" th:field="*{email}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">Login:</label>
+                            <input type="text" class="form-control-plaintext" th:field="*{login}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label form-label-custom">Status:</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input form-check-input-custom" type="radio" value="true"
+                                           th:field="*{ativo}" id="ativoTrue">
+                                    <label class="form-check-label" for="ativoTrue">Ativo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input form-check-input-custom" type="radio" value="false"
+                                           th:field="*{ativo}" id="ativoFalse">
+                                    <label class="form-check-label" for="ativoFalse">Inativo</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Mensagem de erro -->
-                <div class="mb-3 row">
-                    <div class="col-sm-10 offset-sm-2">
-                        <span class="mensagem" th:if="${mensagem}" th:text="${mensagem}"></span>
-                    </div>
-                </div>
+                        <h5 class="mt-4 mb-3">Atribuir Papéis</h5>
 
-                <!-- Botão de Submissão -->
-                <div class="mb-3 row">
-                    <div class="col-sm-10 offset-sm-2">
-                        <input class="btn btn-primary" type="submit" value="Alterar">
-                    </div>
-                </div>
-            </form>
+                        <div th:each="pp : ${listaPapeis}" class="form-check form-check-custom">
+                            <input class="form-check-input form-check-input-custom" type="checkbox" name="pps" th:value="${pp.id}"
+                                   th:checked="${#lists.contains(usuario.papeis, pp)}" id="'papel_' + ${pp.id}">
+                            <label class="form-check-label" th:for="'papel_' + ${pp.id}" th:text="${pp.papel}"></label>
+                        </div>
 
+                        <div th:if="${mensagem}" class="text-danger-custom mt-3" th:text="${mensagem}"></div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-warning btn-warning-custom">
+                                <i class="bi bi-save-fill me-2"></i> Salvar Alterações
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
