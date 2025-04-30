@@ -1,22 +1,17 @@
 package com.mvc_thymeleaf.controller;
 
 import com.mvc_thymeleaf.dto.request.UsuarioRequestDto;
-import com.mvc_thymeleaf.entities.Usuario;
 import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import com.mvc_thymeleaf.services.PapelUsuarioService;
 import com.mvc_thymeleaf.services.UsuarioService;
 import com.mvc_thymeleaf.services.exceptions.LoginExisteException;
-import com.mvc_thymeleaf.utils.ConsultarUSuarioAutenticado;
 import jakarta.validation.Valid;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/usuario")
@@ -35,9 +30,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/index")
-    public String index() {
+    public String index(Authentication authentication) {
 
         String redirectURL = this.usuarioService.autorizacao();
+        ModelAndView mv = new ModelAndView(redirectURL);
 
         return redirectURL;
     }

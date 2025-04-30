@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +42,9 @@ public class SecurityConfiguration {
         return detalheDoUsuario;
     }
 
+
+
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -57,7 +62,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/biblio/**").hasRole("BIBLIOTECARIO")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/usuario/editarPapel/**").hasRole("ADMIN")
-                        .requestMatchers("/usuario/admin/***").hasRole("ADMIN")
+                        .requestMatchers("/usuario/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling().accessDeniedPage("/auth/auth-acesso-negado")

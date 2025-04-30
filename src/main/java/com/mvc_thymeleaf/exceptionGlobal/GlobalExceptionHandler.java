@@ -14,5 +14,6 @@ public class GlobalExceptionHandler {
         model.addAttribute("loginExiste", ex.getMessage());
         return "usuario/publica-criar-usuario";
     }
+
 }
 

@@ -2,6 +2,7 @@ package com.mvc_thymeleaf.security;
 
 import com.mvc_thymeleaf.entities.Papel;
 import com.mvc_thymeleaf.entities.Usuario;
+import com.mvc_thymeleaf.exceptionGlobal.UsuarioInativoException;
 import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,17 +30,12 @@ public class DetalheUsuarioServico implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = iUsuarioRepository.findByLogin(username);
 
-        if (usuario != null && usuario.isAtivo()) {
-            Set<GrantedAuthority> papeisDoUsuario = new HashSet<GrantedAuthority>();
-            for (Papel papel : usuario.getPapeis()) {
-                GrantedAuthority pp = new SimpleGrantedAuthority("ROLE_" + papel.getPapel());
-                papeisDoUsuario.add(pp);
-            }
-            User user = new User(usuario.getLogin(), usuario.getPassword(), papeisDoUsuario);
-            return user;
-        } else {
+        if (usuario == null) {
             throw new UsernameNotFoundException("Usuário não encontrado");
+        } else if (!usuario.isAtivo()) {
+            throw new UsuarioInativoException("Usuário inativo, contate o administrador.");
+        } else {
+            return new UsuarioPrincipal(usuario);
         }
-
     }
 }

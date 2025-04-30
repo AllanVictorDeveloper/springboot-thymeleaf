@@ -10,7 +10,6 @@ import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import com.mvc_thymeleaf.services.exceptions.LoginExisteException;
 import com.mvc_thymeleaf.services.mapper.UsuarioMapper;
 import com.mvc_thymeleaf.utils.ConsultarUSuarioAutenticado;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -121,12 +120,12 @@ public class UsuarioService {
 
     }
 
-    public Usuario buscarUsuarioPorLogin(String login){
+    public Usuario buscarUsuarioPorLogin(String login) {
         return this.iUsuarioRepository.findByLogin(login);
     }
 
-    public String autorizacao(){
-       var login =  ConsultarUSuarioAutenticado.getNomeUsuarioAutenticado();
+    public String autorizacao() {
+        var login = ConsultarUSuarioAutenticado.getNomeUsuarioAutenticado();
 
         Usuario usuario = this.buscarUsuarioPorLogin(login);
         String redirectURL = "";
@@ -138,6 +137,30 @@ public class UsuarioService {
             redirectURL = "/auth/biblio/biblio-index";
         }
         return redirectURL;
+    }
+
+
+    public String autorizacaoHome() {
+
+        var login = ConsultarUSuarioAutenticado.getNomeUsuarioAutenticado();
+
+        String redirectURL = "";
+
+        if (login != null) {
+
+            Usuario usuario = this.buscarUsuarioPorLogin(login);
+
+            if (this.temAutorizacao(usuario, "ADMIN")) {
+                return redirectURL = "/auth/admin/admin-index";
+            } else if (this.temAutorizacao(usuario, "USER")) {
+                return redirectURL = "/auth/user/user-index";
+            } else if (this.temAutorizacao(usuario, "BIBLIOTECARIO")) {
+                return redirectURL = "/auth/biblio/biblio-index";
+            }
+        }
+
+        return redirectURL = "/index/publica-index";
+
     }
 
 
