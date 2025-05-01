@@ -1,6 +1,5 @@
 package com.mvc_thymeleaf.security;
 
-import com.mvc_thymeleaf.repository.IUsuarioRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,13 +7,16 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.sql.DataSource;
 
@@ -24,21 +26,56 @@ import javax.sql.DataSource;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
-    private final LoginSucesso loginSucesso;
+    private final DataSource dataSource;
 
-    public SecurityConfiguration(LoginSucesso loginSucesso) {
-        this.loginSucesso = loginSucesso;
+
+    public SecurityConfiguration(DataSource dataSource) {
+
+        this.dataSource = dataSource;
     }
 
     @Bean
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        DetalheUsuarioServico detalheDoUsuario = new DetalheUsuarioServico();
-        return detalheDoUsuario;
+    public UserDetailsService userDetailsServiceBean() {
+
+        return new DetalheUsuarioServico();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
+//         repo.setCreateTableOnStartup(true); // descomente se quiser que a tabela seja criada automaticamente
+        return repo;
+    }
+
+
+    @Bean
+    public LoginSucesso loginSucesso(
+            PersistentTokenRepository tokenRepository,
+            SessionAuthenticationStrategy sessionAuthenticationStrategy
+    ) {
+        return new LoginSucesso(tokenRepository);
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+
+    @Bean
+    public static HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public SessionAuthenticationStrategy sessionAuthenticationStrategy(SessionRegistry sessionRegistry) {
+        return new RegisterSessionAuthenticationStrategy(sessionRegistry);
     }
 
 
@@ -61,16 +98,19 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
+                        .expiredUrl("/login?expirado") // URL para redirecionar se a sessão for expirada
+                        .sessionRegistry(sessionRegistry())
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler(loginSucesso)
+                        .successHandler(loginSucesso(persistentTokenRepository(), sessionAuthenticationStrategy(sessionRegistry())))
                         .permitAll()
                 )
                 .rememberMe(remember -> remember
                         .key("@DY4524U2IY4653IID35435423D3FG35") // pode ser qualquer string, mas mantenha em segredo
                         .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 dias
-
+                        .userDetailsService(userDetailsServiceBean())
+                        .tokenRepository(persistentTokenRepository())
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -81,7 +121,6 @@ public class SecurityConfiguration {
                 );
         return http.build();
     }
-
 
 
 }
