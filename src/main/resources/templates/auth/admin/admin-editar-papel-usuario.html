@@ -7,77 +7,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" th:href="@{/css/auth/admin/admin.editar.papel.usuario.css}"/>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .edit-roles-container {
-            margin-top: 2rem;
-        }
-
-        .edit-roles-card {
-            border: none;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-        }
-
-        .edit-roles-card-header {
-            background-color: #ffc107;
-            color: #212529;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem 0.5rem 0 0;
-        }
-
-        .edit-roles-card-body {
-            padding: 1.5rem;
-        }
-
-        .form-label-custom {
-            font-weight: bold;
-        }
-
-        .form-control-plaintext {
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .form-check-custom {
-            padding-left: 1.5em;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-check-input-custom {
-            float: left;
-            margin-left: -1.5em;
-        }
-
-        .btn-warning-custom {
-            background-color: #ffc107;
-            border-color: #ffc107;
-            border-radius: 0.25rem;
-            padding: 0.75rem 1.5rem;
-        }
-
-        .btn-warning-custom:hover {
-            background-color: #e0a800;
-            border-color: #d39e00;
-        }
-
-        .text-danger-custom {
-            color: #dc3545;
-            font-size: 0.875em;
-            margin-top: 0.25rem;
-        }
-    </style>
 </head>
 <body>
 <div th:insert="~{fragments/publica-nav :: nav}"></div>

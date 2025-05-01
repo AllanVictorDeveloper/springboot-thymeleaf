@@ -27,10 +27,5 @@ public class HomeController {
         return mv;
     }
 
-    @RequestMapping("/login")
-    public ModelAndView entrar() {
-        ModelAndView mv = new ModelAndView("login");
 
-        return mv;
-    }
 }

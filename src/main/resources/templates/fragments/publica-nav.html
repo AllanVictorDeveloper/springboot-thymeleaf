@@ -6,34 +6,7 @@
     <title>Biblioteca</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-
-        .navbar-nav .nav-link {
-            padding: 0.75rem 1rem;
-        }
-
-        .navbar-nav .nav-item.active .nav-link {
-            font-weight: bold;
-        }
-
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            border-radius: 0.25rem;
-        }
-
-        .dropdown-item {
-            padding: 0.5rem 1.5rem;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/fragments/publica.nav.css}" />
 </head>
 <body>
 <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
@@ -86,7 +59,7 @@
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li sec:authorize="isAuthenticated()" th:replace="~{auth/auth-nav :: nav-profile}"></li>
+                <li sec:authorize="isAuthenticated()" th:insert="~{auth/auth-nav :: nav-profile}"></li>
             </ul>
         </div>
     </div>

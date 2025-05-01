@@ -1,0 +1,25 @@
+body {
+        background-color: #f8f9fa;
+    }
+
+    .home-container {
+        margin-top: 3rem;
+    }
+
+    .jumbotron-custom {
+        background-color: #e9ecef;
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    .admin-greeting {
+        color: #007bff;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .welcome-message {
+        font-size: 1.2rem;
+        color: #6c757d;
+    }

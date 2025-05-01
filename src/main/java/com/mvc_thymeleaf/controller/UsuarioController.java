@@ -40,7 +40,7 @@ public class UsuarioController {
 
     @GetMapping("/novo")
     public ModelAndView adicionarUsuario() {
-        ModelAndView mv = new ModelAndView("usuario/publica-criar-usuario");
+        ModelAndView mv = new ModelAndView("publica/publica-criar-usuario");
 
         mv.addObject("usuario", new UsuarioRequestDto());
         return mv;
@@ -53,7 +53,7 @@ public class UsuarioController {
             RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
-            return "usuario/publica-criar-usuario";
+            return "publica/publica-criar-usuario";
         }
 
         try {
@@ -61,7 +61,7 @@ public class UsuarioController {
         } catch (LoginExisteException e) {
             // Adiciona erro no campo específico 'login'
             result.rejectValue("login", "error.usuario", e.getMessage());
-            return "usuario/publica-criar-usuario";
+            return "publica/publica-criar-usuario";
         }
 
         attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");
@@ -94,7 +94,7 @@ public class UsuarioController {
     public ModelAndView buscarEditarUsuario(@PathVariable Long id) {
         var usuario = this.usuarioService.buscarUsuarioPorId(id);
 
-        ModelAndView mv = new ModelAndView("auth/user/user-alterar-usuario");
+        ModelAndView mv = new ModelAndView("auth/admin/admin-alterar-usuario");
 
         mv.addObject("usuario", usuario);
 
@@ -110,7 +110,7 @@ public class UsuarioController {
     ) {
 
         if (result.hasErrors()) {
-            return "auth/user/user-alterar-usuario";
+            return "auth/admin/admin-alterar-usuario";
         }
 
         this.usuarioService.editarUsuario(id, requestDto);

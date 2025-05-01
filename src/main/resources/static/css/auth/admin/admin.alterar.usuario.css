@@ -1,0 +1,49 @@
+ body {
+            background-color: #f8f9fa;
+        }
+
+        .edit-user-container {
+            margin-top: 2rem;
+        }
+
+        .edit-user-card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-user-card-header {
+            background-color: #00c851;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .edit-user-card-body {
+            padding: 1.5rem;
+        }
+
+        .form-label-custom {
+            font-weight: bold;
+        }
+
+        .form-control-custom {
+            border-radius: 0.25rem;
+        }
+
+        .btn-success-custom {
+            background-color: #00c851;
+            border-color: #00c851;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .btn-success-custom:hover {
+            background-color: #009639;
+            border-color: #009639;
+        }
+
+        .invalid-feedback {
+            font-size: 0.875em;
+            color: #dc3545;
+        }
