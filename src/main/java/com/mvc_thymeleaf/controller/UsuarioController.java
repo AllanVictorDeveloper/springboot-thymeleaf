@@ -64,7 +64,7 @@ public class UsuarioController {
             return "publica/publica-criar-usuario";
         }
 
-        attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");
+        attributes.addFlashAttribute("mensagem", "Usuário cadastrado com sucesso!");
 
         return "redirect:/usuario/novo";
 

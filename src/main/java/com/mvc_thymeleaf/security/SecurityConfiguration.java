@@ -72,6 +72,10 @@ public class SecurityConfiguration {
                         .successHandler(loginSucesso)
                         .permitAll()
                 )
+                .rememberMe(remember -> remember
+                        .key("@DY4524U2IY4653IID35435423D3FG35") // pode ser qualquer string, mas mantenha em segredo
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 dias
+                )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")

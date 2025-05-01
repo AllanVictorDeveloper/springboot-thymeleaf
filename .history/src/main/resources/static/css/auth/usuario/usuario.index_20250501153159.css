@@ -7,10 +7,10 @@ body {
     }
 
     .jumbotron-custom {
-        background-color: #a99bccdc ;
+        background-color: #fff133e1;
         padding: 2rem;
         border-radius: 0.5rem;
-        color: #6e33ff ;
+        color: #0f5132;
     }
 
     .librarian-greeting {

@@ -132,7 +132,7 @@ public class UsuarioService {
         if (this.temAutorizacao(usuario, "ADMIN")) {
             redirectURL = "/auth/admin/admin-index";
         } else if (this.temAutorizacao(usuario, "USER")) {
-            redirectURL = "/auth/user/user-index";
+            redirectURL = "/auth/usuario/usuario-index";
         } else if (this.temAutorizacao(usuario, "BIBLIOTECARIO")) {
             redirectURL = "/auth/biblio/biblio-index";
         }
@@ -153,7 +153,7 @@ public class UsuarioService {
             if (this.temAutorizacao(usuario, "ADMIN")) {
                 return redirectURL = "/auth/admin/admin-index";
             } else if (this.temAutorizacao(usuario, "USER")) {
-                return redirectURL = "/auth/user/user-index";
+                return redirectURL = "/auth/usuario/usuario-index";
             } else if (this.temAutorizacao(usuario, "BIBLIOTECARIO")) {
                 return redirectURL = "/auth/biblio/biblio-index";
             }
