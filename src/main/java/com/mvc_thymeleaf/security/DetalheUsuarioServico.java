@@ -4,6 +4,7 @@ import com.mvc_thymeleaf.entities.Papel;
 import com.mvc_thymeleaf.entities.Usuario;
 import com.mvc_thymeleaf.exceptionGlobal.UsuarioInativoException;
 import com.mvc_thymeleaf.repository.IUsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,11 +21,9 @@ import java.util.Set;
 @Transactional
 public class DetalheUsuarioServico implements UserDetailsService {
 
-    private final IUsuarioRepository iUsuarioRepository;
+    @Autowired
+    private  IUsuarioRepository iUsuarioRepository;
 
-    public DetalheUsuarioServico(IUsuarioRepository iUsuarioRepository) {
-        this.iUsuarioRepository = iUsuarioRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

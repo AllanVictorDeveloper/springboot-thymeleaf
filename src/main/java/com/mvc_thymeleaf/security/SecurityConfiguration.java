@@ -11,8 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -20,30 +24,17 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
-    private final IUsuarioRepository iUsuarioRepository;
     private final LoginSucesso loginSucesso;
 
-    public SecurityConfiguration(IUsuarioRepository iUsuarioRepository, LoginSucesso loginSucesso) {
-        this.iUsuarioRepository = iUsuarioRepository;
+    public SecurityConfiguration(LoginSucesso loginSucesso) {
         this.loginSucesso = loginSucesso;
     }
 
-
-    @Bean
-    public BCryptPasswordEncoder gerarCriptografia() {
-        BCryptPasswordEncoder criptografia = new BCryptPasswordEncoder();
-        return criptografia;
-    }
-
-
     @Bean
     public UserDetailsService userDetailsServiceBean() throws Exception {
-        DetalheUsuarioServico detalheDoUsuario = new DetalheUsuarioServico(iUsuarioRepository);
+        DetalheUsuarioServico detalheDoUsuario = new DetalheUsuarioServico();
         return detalheDoUsuario;
     }
-
-
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -67,6 +58,10 @@ public class SecurityConfiguration {
                 )
                 .exceptionHandling().accessDeniedPage("/auth/auth-acesso-negado")
                 .and()
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(loginSucesso)
@@ -75,14 +70,18 @@ public class SecurityConfiguration {
                 .rememberMe(remember -> remember
                         .key("@DY4524U2IY4653IID35435423D3FG35") // pode ser qualquer string, mas mantenha em segredo
                         .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 dias
+
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
         return http.build();
     }
+
 
 
 }
